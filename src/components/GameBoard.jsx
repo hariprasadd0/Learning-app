@@ -5,6 +5,7 @@ import { LevelComplete } from './LevelComplete';
 import LearningContext from '../context/LearningContext';
 import { useAudio } from '../hooks/useAudio';
 import { useEffect } from 'react';
+import { useCallback } from 'react';
 
 export const GameBoard = () => {
   const {
@@ -20,24 +21,34 @@ export const GameBoard = () => {
   const { playSound, vibrate } = useAudio();
   const [highlightIndex, setHighlightIndex] = useState(-1);
 
-  const handleClick = (clickedItem) => {
-    const expected = getExpectedItem();
-    const data = getCurrentData();
-    const expectedIndex = data.indexOf(expected);
+  const handleClick = useCallback(
+    (clickedItem) => {
+      const expected = getExpectedItem();
+      const data = getCurrentData();
+      const expectedIndex = data.indexOf(expected);
 
-    if (clickedItem === expected) {
-      playSound('success');
-      handleCorrect();
-      setHighlightIndex(-1);
-    } else {
-      playSound('error');
-      vibrate();
-      handleWrong(clickedItem);
-      setHighlightIndex(expectedIndex);
+      if (clickedItem === expected) {
+        playSound('success');
+        handleCorrect();
+        setHighlightIndex(-1);
+      } else {
+        playSound('error');
+        vibrate();
+        handleWrong(clickedItem);
+        setHighlightIndex(expectedIndex);
 
-      setTimeout(() => setHighlightIndex(-1), 3000);
-    }
-  };
+        setTimeout(() => setHighlightIndex(-1), 3000);
+      }
+    },
+    [
+      getExpectedItem,
+      getCurrentData,
+      playSound,
+      handleCorrect,
+      vibrate,
+      handleWrong,
+    ],
+  );
   const data = getCurrentData();
 
   useEffect(() => {
