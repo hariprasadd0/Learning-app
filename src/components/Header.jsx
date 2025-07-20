@@ -13,9 +13,6 @@ export const Header = () => {
     setSoundEnabled,
     highContrast,
     setHighContrast,
-    getExpectedItem,
-    isComplete,
-    isLevelComplete,
   } = useContext(LearningContext);
 
   return (
